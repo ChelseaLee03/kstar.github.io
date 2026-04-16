@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>K-STAR | Knowledge-Guided Submap Tracking and Recovery for Monocular SLAM in degraded visual conditions</title>
+  <meta name="description" content="Project page for K-STAR: Knowledge-Guided Submap Tracking and Recovery for Monocular SLAM in degraded visual conditions." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="noise-bg" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="logo">K-STAR</div>
+    <nav>
+      <a href="#demo">Video</a>
+      <a href="#overview">Overview</a>
+      <a href="#method">Method</a>
+      <a href="#results">Results</a>
+      <a href="#paper">Paper</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero reveal" id="overview">
+      <p class="eyebrow">KSEM 2026</p>
+      <h1>Knowledge-Guided Submap Tracking and Recovery for Monocular SLAM in Degraded Visual Conditions</h1>
+      <p class="subtitle">
+        K-STAR targets monocular SLAM failures on small quadruped robots in challenging conditions with
+        <strong>motion blur, repetitive structures, and low-texture scenes</strong>.
+        Instead of forcing uninterrupted tracking, it models visual degradation as explicit knowledge and uses
+        state-aware recovery to preserve global consistency.
+      </p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#paper">Read Paper Info</a>
+        <a class="btn ghost" href="#results">See Results</a>
+      </div>
+      <ul class="quick-stats">
+        <li><span>99.32%</span><small>S1 exploration rate</small></li>
+        <li><span>99.31%</span><small>S2 exploration rate</small></li>
+        <li><span>96.52%</span><small>S3 exploration rate</small></li>
+        <li><span>32.6%</span><small>degraded frames (real world)</small></li>
+      </ul>
+    </section>
+
+    <section class="problem-stack reveal">
+      <article class="card">
+        <h2>Problem Setting</h2>
+        <section class="top-media" id="demo">
+          <div class="media-head">
+            <p class="eyebrow">Project Video</p>
+            <h2>System Demo</h2>
+          </div>
+          <div class="video-shell">
+            <video controls preload="metadata" poster="assets/original_figures/intro.png">
+              <source src="assets/media/project-demo.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </section>
+        <p>
+          Micro-scale quadruped robots used in pipelines and confined infrastructure often carry only a monocular camera.
+          Fast gait dynamics and vibration degrade observations, while repetitive and texture-poor environments break
+          conventional feature-based tracking.
+        </p>
+        <figure class="inline-figure">
+          <img src="assets/original_figures/intro.png" alt="Project introduction visual in real-world pipeline scene" />
+        </figure>
+      </article>
+      <article class="card">
+        <h2>Core Idea</h2>
+        <p>
+          K-STAR is failure-aware by design: it detects degraded perception, isolates local failures through submap
+          management, and reconnects fragmented trajectories using kinematics-guided alignment across visual blind gaps.
+        </p>
+      </article>
+    </section>
+
+    <section class="reveal" id="method">
+      <h2 class="section-title">Method Overview</h2>
+      <div class="pipeline">
+        <div class="node">
+          <h3>Perception Layer</h3>
+          <p>Infers frame reliability and degradation source from feature density and temporal persistence.</p>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node">
+          <h3>Decision Layer</h3>
+          <p>Switches among Fine Tracking, Coarse Tracking, and Recovery through a time-aware FSM.</p>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node">
+          <h3>Execution Layer</h3>
+          <p>Performs submap lifecycle control and greedy kinematic stitching to restore global continuity.</p>
+        </div>
+      </div>
+
+      <figure class="paper-figure card">
+        <img src="assets/original_figures/framework-original.png" alt="K-STAR framework diagram" />
+        <figcaption> The Framework of K-STAR: hierarchical architecture (Perception-Decision-Execution).</figcaption>
+      </figure>
+    </section>
+
+    <section class="reveal" id="results">
+      <h2 class="section-title">Experimental Results</h2>
+
+      <div class="card table-card">
+        <h3>Simulation: Map Exploration Rate</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>S1 (Z-shape)</th>
+              <th>S2 (Square)</th>
+              <th>S3 (Irregular)</th>
+              <th>Failure Mode</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>K-STAR</td>
+              <td>99.32%</td>
+              <td>99.31%</td>
+              <td>96.52%</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td>ORB-SLAM3</td>
+              <td>56.9%</td>
+              <td>26.4%</td>
+              <td>23.1%</td>
+              <td>Tracking Lost</td>
+            </tr>
+            <tr>
+              <td>ORB-SLAM2</td>
+              <td>X</td>
+              <td>X</td>
+              <td>X</td>
+              <td>Tracking Failure</td>
+            </tr>
+            <tr>
+              <td>VINS-Mono</td>
+              <td>X</td>
+              <td>X</td>
+              <td>X</td>
+              <td>Initialization Failure</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-two">
+        <article class="card">
+          <h3>Trajectory Accuracy (K-STAR)</h3>
+          <ul class="metric-list">
+            <li><strong>S1:</strong> APE RMSE 0.104612 m, RPE RMSE 0.026716 m</li>
+            <li><strong>S2:</strong> APE RMSE 0.043241 m, RPE RMSE 0.030891 m</li>
+            <li><strong>S3:</strong> APE RMSE 0.085272 m, RPE RMSE 0.030065 m</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Real-World Pipeline</h3>
+          <ul class="metric-list">
+            <li><strong>Total frames:</strong> 2530</li>
+            <li><strong>Degraded frames:</strong> 826 (32.6%)</li>
+            <li><strong>Generated submaps:</strong> 7</li>
+            <!-- <li><strong>Outcome:</strong> Preserved global topology across a 90-degree turn</li> -->
+          </ul>
+        </article>
+      </div>
+
+      <figure class="paper-figure card">
+        <div class="double-fig">
+          <img src="assets/original_figures/realworld-scene-original.png" alt="Real-world scenarios" />
+          <img src="assets/original_figures/realworld-result-original.png" alt=" Reconstruction results" />
+        </div>
+        <figcaption>Real-world experiment: Validation results in texture-poor L-shaped drainage pipeline.</figcaption>
+      </figure>
+    </section>
+
+    <section class="reveal" id="paper">
+      <h2 class="section-title">Paper & Project Info</h2>
+      <div class="paper-card">
+        <p class="paper-title">
+          K-STAR: Knowledge-Guided Submap Tracking and Recovery for Monocular SLAM in Degraded Visual Conditions
+        </p>
+        <p>Han Li, Boyang Li<sup>*</sup>, Shiqi Zhao, Shuai Zhao, Kai Huang</p>
+        <p>School of Computer Science and Engineering, Sun Yat-sen University</p>
+        <!-- <p>KSEM 2026</p> -->
+        <div class="hero-actions">
+          <a class="btn primary" href="paper/K-STAR_camera_ready.pdf">Open Paper PDF</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Project Website for K-STAR | Built for paper presentation and technical communication.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
